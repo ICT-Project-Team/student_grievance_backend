@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Http\Controllers\UserController;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
@@ -19,7 +20,8 @@ class DatabaseSeeder extends Seeder
         $this->call(
             [
                 FacultySeeder::class,
-                DepartmentSeeder::class
+                DepartmentSeeder::class,
+                UserController::class
             ]
         );
     }
