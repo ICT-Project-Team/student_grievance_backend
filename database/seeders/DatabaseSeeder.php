@@ -17,11 +17,11 @@ class DatabaseSeeder extends Seeder
      */
     public function run()
     {
-        User::factory()->count(10)->create();
         $this->call(
             [
                 FacultySeeder::class,
-                DepartmentSeeder::class
+                DepartmentSeeder::class,
+                UserSeeder::class
             ]
         );
     }
