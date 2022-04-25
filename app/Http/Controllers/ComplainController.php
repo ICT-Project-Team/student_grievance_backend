@@ -26,14 +26,14 @@ class ComplainController extends Controller
 
     public function getAllComplaint(Request $request)
     {
-        // $complaints = Complain::all();
-        // return response()->json(
-        //   $complaints
-        // );
+        $complaints = Complain::all();
         return response()->json(
-            [
-                'say' => 'hello'
-            ]
+          $complaints
         );
+        // return response()->json(
+        //     [
+        //         'say' => 'hello'
+        //     ]
+        // );
     }
 }
