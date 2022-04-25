@@ -10,7 +10,7 @@ class UserController extends Controller
 {
     public function login(Request $request){
         $user = User::where('email',$request->email)->first();
-        if($user){
+        if($user && Hash::check($request->password,$user->password)){
             return response()->json(
                 [
                     "status" => "ok",
@@ -20,7 +20,8 @@ class UserController extends Controller
         }else{
             return response()->json(
                 [
-                    "status" => "invalid email or password"
+                    "status" => "invalid email or password",
+                    "password" => $request->password
                 ],403
             );
         }
