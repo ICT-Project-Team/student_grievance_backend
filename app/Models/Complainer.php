@@ -13,6 +13,7 @@ class Complainer extends Model
         'student_name',
         'student_id',
         'gender',
+        'student_type',
         'student_year',
         'address',
         'phone_no',
