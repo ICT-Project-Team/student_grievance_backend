@@ -20,8 +20,7 @@ class UserController extends Controller
         }else{
             return response()->json(
                 [
-                    "status" => "invalid email or password",
-                    "password" => $request->password
+                    "status" => "invalid email or password"
                 ],403
             );
         }
