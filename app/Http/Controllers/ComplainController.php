@@ -28,7 +28,9 @@ class ComplainController extends Controller
     {
         $complaints = Complain::all();
         return response()->json(
-          $complaints
+          [
+            'say' => 'hello'
+          ]
         );
         // return response()->json(
         //     [
