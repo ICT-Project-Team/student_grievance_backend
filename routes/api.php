@@ -24,4 +24,4 @@ use App\Http\Controllers\UserController;
 
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/send_complaint', [ComplainController::class, 'createComplain']);
-Route::middleware('auth:sanctum')->get('/all_complaint', [ComplainController::class, 'getComplaint']);
+Route::get('/all_complaint', [ComplainController::class, 'getComplaint']);
