@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('student_id');
             $table->string('gender');
             $table->integer('student_year');
+            $table->string('student_type');
             $table->string('address');
             $table->string('phone_no');
             $table->string('email');
