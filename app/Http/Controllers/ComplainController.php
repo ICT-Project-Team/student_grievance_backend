@@ -8,9 +8,10 @@ use Illuminate\Http\Request;
 
 class ComplainController extends Controller
 {
-    public function createComplain(Request $request){
+    public function createComplain(Request $request)
+    {
         $complainer = null;
-        if($request->student_name){
+        if ($request->student_name) {
             $complainer = Complainer::create($request->all());
         }
         $complain = new Complain;
@@ -23,10 +24,16 @@ class ComplainController extends Controller
         return $complain;
     }
 
-    public function getAllComplaint(Request $request){
-        $complaints = Complain::all();
+    public function getAllComplaint(Request $request)
+    {
+        // $complaints = Complain::all();
+        // return response()->json(
+        //   $complaints
+        // );
         return response()->json(
-          $complaints
+            [
+                'say' => 'hello'
+            ]
         );
     }
 }
