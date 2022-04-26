@@ -16,6 +16,7 @@ class ComplainController extends Controller
         }
         $complain = new Complain;
         $complain->complainer_id = $complainer ? $complainer->id : null;
+        $complain->department_id = $request->department_id;
         $complain->complain_sub_category_id = $request->complain_sub_category_id;
         $complain->objective = $request->objective;
         $complain->reference = $request->reference;
@@ -24,11 +25,30 @@ class ComplainController extends Controller
         return $complain;
     }
 
-    public function getComplaint(Request $request)
+    public function getComplaints(Request $request)
     {
-        $complaints = Complain::all();
+        $complaints = Complain::with(['complainer','department','department.faculty'])->get();
         return response()->json(
-            $complaints,400
+            $complaints, 400
         );
+    }
+
+    public function updateComplaintProgress(Request $request){
+        $progress = array("unresolved", "resolving", "resolved");
+        if (!in_array($request->progress, $progress)){
+            return response()->json(
+                ["status" => "invalid progress"]
+                ,200);
+        }
+        $complaint = Complain::find($request->id);
+        $complaint->progress = $request->progress;
+        $complaint->save();
+        return response()->json(
+            ["status" => "ok"]
+        ,200);
+    }
+
+    public function getSummaryComplaints(Request $request){
+
     }
 }

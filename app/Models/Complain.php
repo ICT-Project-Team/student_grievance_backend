@@ -12,6 +12,7 @@ class Complain extends Model
         'complain_sub_category_id',
         'department_id',
         'complainer_id',
+        'progress',
         'objective',
         'reference',
         'statement',
@@ -25,6 +26,6 @@ class Complain extends Model
         return $this->belongsTo(Department::class);
     }
     public function complainer(){
-        return $this->hasOne(Complain::class);
+        return $this->belongsTo(Complainer::class);
     }
 }

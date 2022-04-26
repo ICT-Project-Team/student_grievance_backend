@@ -18,6 +18,7 @@ return new class extends Migration
             $table->foreignId('complainer_id')->nullable();
             $table->foreignId('complain_sub_category_id');
             $table->foreignId('department_id')->nullable();
+            $table->string('progress')->default("unresolved");
             $table->string('objective');
             $table->string('reference');
             $table->string('statement');
