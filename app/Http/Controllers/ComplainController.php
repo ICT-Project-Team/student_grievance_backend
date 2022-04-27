@@ -22,14 +22,16 @@ class ComplainController extends Controller
         $complain->reference = $request->reference;
         $complain->statement = $request->statement;
         $complain->save();
-        return $complain;
+        return response()->json(
+            ["status" => "ok"]
+        );
     }
 
     public function getComplaints(Request $request)
     {
         $complaints = Complain::with(['complainer','department','department.faculty','complain_sub_category','complain_sub_category.complainCategory'])->get();
         return response()->json(
-            $complaints, 400
+            $complaints, 200
         );
     }
 
@@ -42,6 +44,9 @@ class ComplainController extends Controller
         }
         $complaint = Complain::find($request->id);
         $complaint->progress = $request->progress;
+        $complaint->settlement_procedures = $request->settlement_procedures;
+        $complaint->result_of_settlement = $request->result_of_settlement;
+        $complaint->others = $request->others;
         $complaint->save();
         return response()->json(
             ["status" => "ok"]

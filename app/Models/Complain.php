@@ -16,6 +16,9 @@ class Complain extends Model
         'objective',
         'reference',
         'statement',
+        'Settlement Procedures',
+        'Result of settlement',
+        'others'
     ];
 
     public function complain_sub_category()
