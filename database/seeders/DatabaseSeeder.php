@@ -21,7 +21,9 @@ class DatabaseSeeder extends Seeder
             [
                 FacultySeeder::class,
                 DepartmentSeeder::class,
-                UserSeeder::class
+                UserSeeder::class,
+                ComplaintCategorySeeder::class,
+                ComplaintSubCategorySeeder::class
             ]
         );
     }

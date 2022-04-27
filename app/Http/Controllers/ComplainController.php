@@ -27,7 +27,7 @@ class ComplainController extends Controller
 
     public function getComplaints(Request $request)
     {
-        $complaints = Complain::with(['complainer','department','department.faculty'])->get();
+        $complaints = Complain::with(['complainer','department','department.faculty','complain_sub_category','complain_sub_category.complainCategory'])->get();
         return response()->json(
             $complaints, 400
         );

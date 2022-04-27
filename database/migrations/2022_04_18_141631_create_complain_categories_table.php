@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('complain_categories', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('name');
+            $table->string('name');
             $table->timestamps();
         });
     }
