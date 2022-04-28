@@ -11,4 +11,7 @@ class ComplainSubCategory extends Model
     public function complainCategory(){
         return $this->belongsTo(ComplainCategory::class);
     }
+    public function complaint(){
+        return $this->hasMany(Complain::class);
+    }
 }
