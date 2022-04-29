@@ -132,9 +132,6 @@ class ComplainController extends Controller
                         ->groupBy('student_year')->mapWithKeys(function ($item, $key) {
                             return [$key ? $key : "អនាមិក" => $item->count()];
                         })
-//                        ->groupBy('student_year')->map(function ($item, $key) {
-//                            return $item->count();
-//                        })
                 ];
             }
         );
@@ -146,8 +143,7 @@ class ComplainController extends Controller
                 "complaint_by_progress" => $countComplaintByProgress,
                 "complaint_by_complaint_type_in_faculty" => $countComplaintByComplaintTypeInFaculty,
                 "complaint_by_gender" => $countComplaintByGender,
-                "complaint_by_year_in_faculty" => $countComplaintByYearInFaculty
-
+                "complaint_by_year_in_faculty" => $countComplaintByYearInFaculty,
             ]
         );
     }
