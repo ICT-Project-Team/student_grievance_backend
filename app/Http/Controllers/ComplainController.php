@@ -173,6 +173,14 @@ class ComplainController extends Controller
             }
         );
 
+        $countSolvedComplaintByCategory = Complain::where('progress','resolved')->get()->groupBy(
+            'complain_sub_category_id'
+        )->mapWithKeys(
+            function ($item, $key){
+                return [ComplainSubCategory::find($key)->name => $item->count()];
+            }
+        );
+
         return response()->json(
             [
                 "complaint_by_faculty" => $groupedComplaintByFaculty,
@@ -182,7 +190,8 @@ class ComplainController extends Controller
                 "complaint_by_gender" => $countComplaintByGender,
                 "complaint_by_year_in_faculty" => $countComplaintByYearInFaculty,
                 "complaint_by_super_type" => $countComplaintByComplaintSuperType,
-                "complaint_by_super_type_in_each_mouth" => $countComplaintByComplaintSuperTypeInEachMonth
+                "complaint_by_super_type_in_each_mouth" => $countComplaintByComplaintSuperTypeInEachMonth,
+                "complaint_only_solved_by_category" => $countSolvedComplaintByCategory
             ]
         );
     }
