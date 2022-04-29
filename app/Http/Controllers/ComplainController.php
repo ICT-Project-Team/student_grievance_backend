@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Complain;
+use App\Models\ComplainCategory;
 use App\Models\Complainer;
 use App\Models\ComplainSubCategory;
 use App\Models\Faculty;
@@ -136,6 +137,42 @@ class ComplainController extends Controller
             }
         );
 
+        $countComplaintByComplaintSuperType = Complain::with('complain_sub_category')->get()->map(
+            function ($item){
+                return $item->complain_sub_category;
+            }
+        )->groupBy('complain_category_id')->mapWithKeys(
+            function ($item,$keys){
+                return [ComplainCategory::find($keys)->name => $item->count()];
+            }
+        );
+
+        $countComplaintByComplaintSuperTypeInEachMonth = Complain::with('complain_sub_category')->get()->groupBy(
+            function ($item){
+                return substr($item['created_at'],0,7);
+            }
+        )->map(
+            function ($item){
+                return $item->map(
+                    function ($item){
+                        return $item->complain_sub_category;
+                    }
+                );
+            }
+        )->map(
+            function ($item){
+                return $item->groupBy('complain_category_id');
+            }
+        )->map(
+            function ($item){
+                return $item->mapWithKeys(
+                  function ($item,$keys){
+                      return [ComplainCategory::find($keys)->name => $item->count()];
+                  }
+                );
+            }
+        );
+
         return response()->json(
             [
                 "complaint_by_faculty" => $groupedComplaintByFaculty,
@@ -144,6 +181,8 @@ class ComplainController extends Controller
                 "complaint_by_complaint_type_in_faculty" => $countComplaintByComplaintTypeInFaculty,
                 "complaint_by_gender" => $countComplaintByGender,
                 "complaint_by_year_in_faculty" => $countComplaintByYearInFaculty,
+                "complaint_by_super_type" => $countComplaintByComplaintSuperType,
+                "complaint_by_super_type_in_each_mouth" => $countComplaintByComplaintSuperTypeInEachMonth
             ]
         );
     }

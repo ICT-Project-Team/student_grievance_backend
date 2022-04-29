@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ComplainCategory extends Model
 {
     use HasFactory;
+    public function sub_category(){
+        return $this->hasMany(ComplainSubCategory::class);
+    }
 }
