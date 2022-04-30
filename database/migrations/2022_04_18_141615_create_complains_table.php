@@ -22,8 +22,8 @@ return new class extends Migration
             $table->string('settlement_procedures')->nullable();
             $table->string('result_of_settlement')->nullable();
             $table->string('others')->nullable();
+            $table->string('reference')->nullable();
             $table->string('objective');
-            $table->string('reference');
             $table->string('statement');
             $table->timestamps();
         });
