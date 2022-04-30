@@ -19,6 +19,7 @@ use App\Http\Controllers\UserController;
 Route::middleware('auth:sanctum')->group(
     function (){
         Route::get('/all_complaint', [ComplainController::class, 'getComplaints']);
+        Route::get('/complaint', [ComplainController::class, 'getComplaint']);
         Route::post('/update_complaint_progress',[ComplainController::class, 'updateComplaintProgress']);
         Route::get('/summery', [ComplainController::class, 'getSummery']);
     }

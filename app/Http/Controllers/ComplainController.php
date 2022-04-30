@@ -33,6 +33,17 @@ class ComplainController extends Controller
         );
     }
 
+    public function getComplaint(Request $request)
+    {
+        $complaint = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complainCategory'])->where('id',$request->id)->get()->first();
+        return response()->json(
+            [
+                "status" => "ok",
+                "complaint" => $complaint
+            ]
+        );
+    }
+
     public function getComplaints(Request $request)
     {
         $complaints = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complainCategory'])->get();
@@ -130,53 +141,53 @@ class ComplainController extends Controller
                         )->flatten()->map(function ($item) {
                             return $item->complainer;
                         })
-                        ->groupBy('student_year')->mapWithKeys(function ($item, $key) {
-                            return [$key ? $key : "អនាមិក" => $item->count()];
-                        })
+                            ->groupBy('student_year')->mapWithKeys(function ($item, $key) {
+                                return [$key ? $key : "អនាមិក" => $item->count()];
+                            })
                 ];
             }
         );
 
         $countComplaintByComplaintSuperType = Complain::with('complain_sub_category')->get()->map(
-            function ($item){
+            function ($item) {
                 return $item->complain_sub_category;
             }
         )->groupBy('complain_category_id')->mapWithKeys(
-            function ($item,$keys){
+            function ($item, $keys) {
                 return [ComplainCategory::find($keys)->name => $item->count()];
             }
         );
 
         $countComplaintByComplaintSuperTypeInEachMonth = Complain::with('complain_sub_category')->get()->groupBy(
-            function ($item){
-                return substr($item['created_at'],0,7);
+            function ($item) {
+                return substr($item['created_at'], 0, 7);
             }
         )->map(
-            function ($item){
+            function ($item) {
                 return $item->map(
-                    function ($item){
+                    function ($item) {
                         return $item->complain_sub_category;
                     }
                 );
             }
         )->map(
-            function ($item){
+            function ($item) {
                 return $item->groupBy('complain_category_id');
             }
         )->map(
-            function ($item){
+            function ($item) {
                 return $item->mapWithKeys(
-                  function ($item,$keys){
-                      return [ComplainCategory::find($keys)->name => $item->count()];
-                  }
+                    function ($item, $keys) {
+                        return [ComplainCategory::find($keys)->name => $item->count()];
+                    }
                 );
             }
         );
 
-        $countSolvedComplaintByCategory = Complain::where('progress','resolved')->get()->groupBy(
+        $countSolvedComplaintByCategory = Complain::where('progress', 'resolved')->get()->groupBy(
             'complain_sub_category_id'
         )->mapWithKeys(
-            function ($item, $key){
+            function ($item, $key) {
                 return [ComplainSubCategory::find($key)->name => $item->count()];
             }
         );
