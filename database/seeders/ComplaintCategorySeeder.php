@@ -22,7 +22,12 @@ class ComplaintCategorySeeder extends Seeder
             'updated_at' => now()
         ]);
         DB::table('complain_categories')->insert([
-            'name' => 'សេវាកម្មផ្សេងៗ',
+            'name' => 'សេវាកម្ម',
+            'created_at' => now(),
+            'updated_at' => now()
+        ]);
+        DB::table('complain_categories')->insert([
+            'name' => 'ផ្សេងៗ',
             'created_at' => now(),
             'updated_at' => now()
         ]);
