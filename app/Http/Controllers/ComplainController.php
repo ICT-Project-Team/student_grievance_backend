@@ -23,8 +23,9 @@ class ComplainController extends Controller
         };
         if($request->complain_sub_category_id == null){
             $complain_sub_category = new ComplainSubCategory;
-            $complain_sub_category->name = $request->complain_sub_category_name;
+            $complain_sub_category->name = $request->other;
             $complain_sub_category->complain_category_id = 3;
+            $complain_sub_category->save();
         };
         $complain = new Complain;
         $complain->complainer_id = $complainer ? $complainer->id : null;
