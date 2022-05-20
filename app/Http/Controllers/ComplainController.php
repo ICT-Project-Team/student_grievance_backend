@@ -21,15 +21,15 @@ class ComplainController extends Controller
         if ($request->student_name) {
             $complainer = Complainer::create($request->all());
         };
-        if($request->complain_sub_category_id){
-            $complain_sub_category_id = new ComplainSubCategory;
+        if($request->complain_sub_category_id == null){
+            $complain_sub_category = new ComplainSubCategory;
             $complain_sub_category->name = $request->complain_sub_category_name;
             $complain_sub_category->complain_category_id = 3;
         };
         $complain = new Complain;
         $complain->complainer_id = $complainer ? $complainer->id : null;
         $complain->department_id = $request->department_id;
-        $complain->complain_sub_category_id = $complain_sub_category ? $request->complain_sub_category_id : $complain_sub_category->id;
+        $complain->complain_sub_category_id = $request->complain_sub_category_id ? $request->complain_sub_category_id : $complain_sub_category->id;
         $complain->objective = $request->objective;
         $complain->reference = $request->reference;
         $complain->statement = $request->statement;
