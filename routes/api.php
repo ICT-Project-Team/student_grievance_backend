@@ -16,6 +16,10 @@ use App\Http\Controllers\UserController;
 |
 */
 
+Route::get('/linkstorage', function () {
+    return Artisan::call('storage:link');
+});
+
 Route::middleware('auth:sanctum')->group(
     function (){
         Route::get('/all_complaint', [ComplainController::class, 'getComplaints']);

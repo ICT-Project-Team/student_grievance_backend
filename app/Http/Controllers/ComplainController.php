@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
 use function PHPUnit\Framework\isNull;
+use Illuminate\Support\Facades\Storage;
 
 class ComplainController extends Controller
 {
@@ -20,6 +21,7 @@ class ComplainController extends Controller
         if ($request->student_name) {
             $complainer = Complainer::create($request->all());
         }
+
         $complain = new Complain;
         $complain->complainer_id = $complainer ? $complainer->id : null;
         $complain->department_id = $request->department_id;
@@ -28,8 +30,37 @@ class ComplainController extends Controller
         $complain->reference = $request->reference;
         $complain->statement = $request->statement;
         $complain->save();
+
+        
+        // Check If user storage directory is exist
+        $directory = "/files/1";
+        // $directory = "/files/".$complain->id;
+        if(!Storage::exists($directory)){
+            Storage::makeDirectory($directory, $mode = 0755, true, true);
+        }
+        $paths = [];
+        if($request->hasFile('references'))
+        {
+            // save files path to images table
+            foreach($request->file('references') as $reference){
+                $path = $reference->store($directory);
+                array_push($paths, $path);
+            }
+
+            $paths = json_encode($paths);
+
+            // attach files path to complain
+            $complain->reference = $paths;
+            $complain->save();
+        }
+
         return response()->json(
-            ["status" => "ok"]
+            [
+                "status" => "ok",
+                "reference" => $request->file('references'),
+                "path" => $paths,
+                "req" => $request->all()
+            ]
         );
     }
 
