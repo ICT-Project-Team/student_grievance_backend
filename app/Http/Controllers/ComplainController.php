@@ -10,10 +10,40 @@ use App\Models\Faculty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\View\View;
+use Mpdf\Mpdf;
+use Mpdf\Config\FontVariables;
+use Mpdf\Config\ConfigVariables;
+use KhmerDateTime\KhmerDateTime;
 use function PHPUnit\Framework\isNull;
 
 class ComplainController extends Controller
 {
+    public function  exportComplatintReport(Request $request){
+        $defaultFontConfig = (new FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+        $mpdf = new \Mpdf\Mpdf(
+            [
+                'mode' => 'utf-8',
+                'orientation' => 'L',
+                'fontDir' => [
+                    base_path('vendor/mpdf/mpdf/ttfonts'),
+                    storage_path('Fonts'),
+                ],
+                'fontdata' => $fontData +  [
+                    'KhmerOSmuollight' => [
+                        'R' => 'KhmerOSmuollight.ttf',
+                        'useOTL' => 255,
+                    ]
+                ]
+            ]
+        );
+        $complaints = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complain_category'])->get();
+        $html = \view('pdf',['complaints' => $complaints])->render();
+        $mpdf->WriteHTML($html);
+        return $mpdf->output('complaint report.pdf','I');
+    }
+
     public function createComplain(Request $request)
     {
         $complainer = null;
@@ -42,7 +72,7 @@ class ComplainController extends Controller
 
     public function getComplaint(Request $request)
     {
-        $complaint = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complainCategory'])->where('id',$request->id)->get()->first();
+        $complaint = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complain_category'])->where('id',$request->id)->first();
         return response()->json(
             [
                 "status" => "ok",

@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ComplainSubCategory extends Model
 {
     use HasFactory;
-    public function complainCategory(){
+    public function complain_category(){
         return $this->belongsTo(ComplainCategory::class);
     }
     public function complaint(){

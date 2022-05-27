@@ -15,7 +15,7 @@ class UserController extends Controller
                 [
                     "status" => "ok",
                     "token" => $user->createToken($user->id)->plainTextToken
-                ],400
+                ],200
             );
         }else{
             return response()->json(
