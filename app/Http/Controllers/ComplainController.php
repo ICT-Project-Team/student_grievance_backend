@@ -10,6 +10,7 @@ use App\Models\Faculty;
 use Illuminate\Http\Request;
 use Illuminate\Support\Arr;
 use Illuminate\Support\Collection;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\View\View;
 use Mpdf\Mpdf;
 use Mpdf\Config\FontVariables;
@@ -62,11 +63,34 @@ class ComplainController extends Controller
         $complain->department_id = $request->department_id;
         $complain->complain_sub_category_id = $request->complain_sub_category_id ? $request->complain_sub_category_id : $complain_sub_category->id;
         $complain->objective = $request->objective;
-        $complain->reference = $request->reference;
         $complain->statement = $request->statement;
         $complain->save();
+        // Check If user storage directory is exist
+        $directory = "/files/".$complain->id;
+        if(!Storage::exists($directory)){
+            Storage::makeDirectory($directory, $mode = 0755, true, true);
+        }
+        $paths = [];
+        if($request->hasFile('references'))
+        {
+            // save files path to images table
+            foreach($request->file('references') as $reference){
+                $path = $reference->store($directory);
+                $path = $request->getHost()."/storage/".$path;
+                array_push($paths, $path);
+            }
+
+            $paths = json_encode($paths);
+
+            // attach files path to complain
+            $complain->reference = $paths;
+        }
+        $complain->save();
         return response()->json(
-            ["status" => "ok"]
+            [
+                "status" => "ok",
+                "path" => $paths
+            ]
         );
     }
 
@@ -90,6 +114,10 @@ class ComplainController extends Controller
                 "complaint" => $complaints
             ]
         );
+    }
+
+    public function getReferenceFile(Request $request){
+
     }
 
     public function updateComplaintProgress(Request $request)
