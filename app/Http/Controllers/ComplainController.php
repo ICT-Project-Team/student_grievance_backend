@@ -80,7 +80,7 @@ class ComplainController extends Controller
                 array_push($paths, $path);
             }
 
-            $paths = json_encode($paths);
+            // $paths = json_encode($paths);
 
             // attach files path to complain
             $complain->reference = $paths;
