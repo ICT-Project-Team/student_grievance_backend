@@ -76,7 +76,7 @@ class ComplainController extends Controller
             // save files path to images table
             foreach($request->file('references') as $reference){
                 $path = $reference->store($directory);
-                $path = $request->getHost()."/storage/".$path;
+                $path = env('APP_URL')."/storage/".$path;
                 array_push($paths, $path);
             }
 
