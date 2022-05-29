@@ -28,7 +28,7 @@ Route::middleware('auth:sanctum')->group(
         Route::post('/update_complaint_progress',[ComplainController::class, 'updateComplaintProgress']);
         Route::get('/summery', [ComplainController::class, 'getSummery']);
 //        Route::get('/get_report',[ComplainController::class, 'exportComplatintReport']);
-        Route::post('/get_report',[ComplainController::class, 'exportComplatintReport']);
+        Route::get('/get_report',[ComplainController::class, 'exportComplatintReport']);
     }
 );
 
