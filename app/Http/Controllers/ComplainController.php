@@ -48,6 +48,34 @@ class ComplainController extends Controller
         return $mpdf->output('complaint report.pdf','I');
     }
 
+    public function  exportComplatintReportBetweenDate(Request $request){
+        $defaultFontConfig = (new FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+        $mpdf = new \Mpdf\Mpdf(
+            [
+                'mode' => 'utf-8',
+                'orientation' => 'L',
+                'fontDir' => [
+                    base_path('vendor/mpdf/mpdf/ttfonts'),
+                    storage_path('Fonts'),
+                ],
+                'fontdata' => $fontData +  [
+                        'KhmerOSmuollight' => [
+                            'R' => 'KhmerOSmuollight.ttf',
+                            'useOTL' => 255,
+                        ]
+                    ]
+            ]
+        );
+        $complaints = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complain_category'])->get();
+        $from = date($request->fromDate);
+        $to = date($request->toDate);
+        $complaints = $complaints->whereBetween('updated_at',[$from,$to]);
+        $html = \view('pdf',['complaints' => $complaints])->render();
+        $mpdf->WriteHTML($html);
+        return $mpdf->output('complaint report.pdf','I');
+    }
+
     public function createComplain(Request $request)
     {
         $complainer = null;
