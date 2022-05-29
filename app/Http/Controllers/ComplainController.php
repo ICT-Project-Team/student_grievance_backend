@@ -40,6 +40,9 @@ class ComplainController extends Controller
             ]
         );
         $complaints = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complain_category'])->get();
+        $from = date($request->fromDate);
+        $to = date($request->toDate);
+        $complaints = $complaints->whereBetween('updated_at',[$from,$to]);
         $html = \view('pdf',['complaints' => $complaints])->render();
         $mpdf->WriteHTML($html);
         return $mpdf->output('complaint report.pdf','I');
