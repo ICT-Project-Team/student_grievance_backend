@@ -8,9 +8,6 @@ use App\Models\Complainer;
 use App\Models\ComplainSubCategory;
 use App\Models\Faculty;
 use Illuminate\Http\Request;
-use Illuminate\Support\Arr;
-use Illuminate\Support\Collection;
-use function PHPUnit\Framework\isNull;
 use Illuminate\Support\Facades\Storage;
 
 class ComplainController extends Controller
@@ -33,21 +30,20 @@ class ComplainController extends Controller
 
         
         // Check If user storage directory is exist
-        $directory = "/files/1";
-        // $directory = "/files/".$complain->id;
-        if(!Storage::exists($directory)){
-            Storage::makeDirectory($directory, $mode = 0755, true, true);
+        // $directory = "/files/1";
+        $directory = "/files/".$complain->id;
+        if(!Storage::disk('public')->exists($directory)){
+            Storage::disk('public')->makeDirectory($directory);
         }
         $paths = [];
+        
         if($request->hasFile('references'))
         {
             // save files path to images table
             foreach($request->file('references') as $reference){
-                $path = $reference->store($directory);
-                array_push($paths, $path);
+                $path = Storage::disk('public')->putFile($directory, $reference);
+                array_push($paths, env('APP_URL').'/storage/'.$path);
             }
-
-            $paths = json_encode($paths);
 
             // attach files path to complain
             $complain->reference = $paths;
