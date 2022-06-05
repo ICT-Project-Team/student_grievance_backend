@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\ComplainController;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Artisan;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\UserController;
 
@@ -28,6 +29,8 @@ Route::middleware('auth:sanctum')->group(
         Route::get('/summery', [ComplainController::class, 'getSummery']);
     }
 );
+Route::get('/get_report_between_date',[ComplainController::class, 'exportComplatintReportBetweenDate']);
+Route::get('/get_report',[ComplainController::class, 'exportComplatintReport']);
 
 Route::post('/login', [UserController::class, 'login']);
 Route::post('/send_complaint', [ComplainController::class, 'createComplain']);

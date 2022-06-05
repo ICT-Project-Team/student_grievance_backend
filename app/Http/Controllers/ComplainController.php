@@ -8,27 +8,94 @@ use App\Models\Complainer;
 use App\Models\ComplainSubCategory;
 use App\Models\Faculty;
 use Illuminate\Http\Request;
+use Illuminate\Support\Arr;
+use Illuminate\Support\Collection;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\View\View;
+use Mpdf\Mpdf;
+use Mpdf\Config\FontVariables;
+use Mpdf\Config\ConfigVariables;
+use KhmerDateTime\KhmerDateTime;
+use function PHPUnit\Framework\isNull;
 
 class ComplainController extends Controller
 {
+    public function  exportComplatintReport(Request $request){
+        $defaultFontConfig = (new FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+        $mpdf = new \Mpdf\Mpdf(
+            [
+                'mode' => 'utf-8',
+                'orientation' => 'L',
+                'fontDir' => [
+                    base_path('vendor/mpdf/mpdf/ttfonts'),
+                    storage_path('Fonts'),
+                ],
+                'fontdata' => $fontData +  [
+                    'KhmerOSmuollight' => [
+                        'R' => 'KhmerOSmuollight.ttf',
+                        'useOTL' => 255,
+                    ]
+                ]
+            ]
+        );
+        $complaints = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complain_category'])->get();
+//        $from = date($request->fromDate);
+//        $to = date($request->toDate);
+//        $complaints = $complaints->whereBetween('updated_at',[$from,$to]);
+        $html = \view('pdf',['complaints' => $complaints])->render();
+        $mpdf->WriteHTML($html);
+        return $mpdf->output('complaint report.pdf','I');
+    }
+
+    public function  exportComplatintReportBetweenDate(Request $request){
+        $defaultFontConfig = (new FontVariables())->getDefaults();
+        $fontData = $defaultFontConfig['fontdata'];
+        $mpdf = new \Mpdf\Mpdf(
+            [
+                'mode' => 'utf-8',
+                'orientation' => 'L',
+                'fontDir' => [
+                    base_path('vendor/mpdf/mpdf/ttfonts'),
+                    storage_path('Fonts'),
+                ],
+                'fontdata' => $fontData +  [
+                        'KhmerOSmuollight' => [
+                            'R' => 'KhmerOSmuollight.ttf',
+                            'useOTL' => 255,
+                        ]
+                    ]
+            ]
+        );
+        $complaints = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complain_category'])->get();
+        $from = date($request->fromDate);
+        $to = date($request->toDate);
+        $complaints = $complaints->whereBetween('updated_at',[$from,$to]);
+        $html = \view('pdf',['complaints' => $complaints])->render();
+        $mpdf->WriteHTML($html);
+        return $mpdf->output('complaint report.pdf','I');
+    }
+
     public function createComplain(Request $request)
     {
         $complainer = null;
+        $complain_sub_category = null;
         if ($request->student_name) {
             $complainer = Complainer::create($request->all());
-        }
-
+        };
+        if($request->complain_sub_category_id == null){
+            $complain_sub_category = new ComplainSubCategory;
+            $complain_sub_category->name = $request->other;
+            $complain_sub_category->complain_category_id = 3;
+            $complain_sub_category->save();
+        };
         $complain = new Complain;
         $complain->complainer_id = $complainer ? $complainer->id : null;
         $complain->department_id = $request->department_id;
-        $complain->complain_sub_category_id = $request->complain_sub_category_id;
+        $complain->complain_sub_category_id = $request->complain_sub_category_id ? $request->complain_sub_category_id : $complain_sub_category->id;
         $complain->objective = $request->objective;
-        $complain->reference = $request->reference;
         $complain->statement = $request->statement;
         $complain->save();
-
-        
         // Check If user storage directory is exist
         // $directory = "/files/1";
         $directory = "/files/".$complain->id;
@@ -47,22 +114,19 @@ class ComplainController extends Controller
 
             // attach files path to complain
             $complain->reference = $paths;
-            $complain->save();
         }
-
+        $complain->save();
         return response()->json(
             [
                 "status" => "ok",
-                "reference" => $request->file('references'),
-                "path" => $paths,
-                "req" => $request->all()
+                "path" => $paths
             ]
         );
     }
 
     public function getComplaint(Request $request)
     {
-        $complaint = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complainCategory'])->where('id',$request->id)->get()->first();
+        $complaint = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complain_category'])->where('id',$request->id)->first();
         return response()->json(
             [
                 "status" => "ok",
@@ -73,10 +137,17 @@ class ComplainController extends Controller
 
     public function getComplaints(Request $request)
     {
-        $complaints = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complainCategory'])->get();
+        $complaints = Complain::with(['complainer', 'department', 'department.faculty', 'complain_sub_category', 'complain_sub_category.complain_category'])->get();
         return response()->json(
-            $complaints, 200
+            [
+                "status" => "ok",
+                "complaint" => $complaints
+            ]
         );
+    }
+
+    public function getReferenceFile(Request $request){
+
     }
 
     public function updateComplaintProgress(Request $request)
