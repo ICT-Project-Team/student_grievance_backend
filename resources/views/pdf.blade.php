@@ -2,6 +2,9 @@
     <head>
         <meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
         <title>Complaint report</title>
+        <meta charset="utf-8">
+        <meta name="description" content="">
+        <meta name="Test" content="">
     </head>
     <style>
         {{--@font-face {--}}
@@ -32,8 +35,16 @@
         .table{
             margin-top: 15px;
         }
+        .header p {
+            font-weight: bold;
+        }
     </style>
     <body>
+        <div>
+            <p style="float: left; width: 30%; font-weight: bold; text-align: center"><br/>គម្រោងកែលម្អការអប់រំឧត្តមសិក្សា<br/>សាកលវិទ្យាល័យភូមិន្ទភ្នំពេញ</p>
+            <p style="float: right; width: 40%; font-weight: bold; text-align: center">ព្រះរាជាណាចក្រកម្ពុជា<br/>ជាតិ សាសនា ព្រះមហាក្សត្រ</p>
+        </div>
+        <br/>
         <h1 class="title">របាយការណ៍ស្តីពី ការតវ៉ា និងការដោះស្រាយសម្រាប់និស្សិត នៅតាមគ្រឹះស្ថានឧត្តមសិក្សា សម្រាប់ឆ្នាំសិក្សា ២០២១-២០២២</h1>
         <table class="table">
             <tr>
@@ -72,5 +83,16 @@
                 @endif
             @endforeach
         </table>
+        <br/>
+        <div style="width: 100%">
+            <p style="font-weight: bold; text-align: center; float: left; width: 40%">
+                <br/><br/>បានឃើញ និងឯកភាព<br/>រាជធានីភ្នំពេញ ថ្ងៃទី .............. ខែ ............... ឆ្នាំ ..............<br/>ជ.សាកលវិទ្យាធិការ
+            </p>
+            <p style="font-weight: bold; text-align: center; float: right; width: 40%">
+                ថ្ងៃ ........................ ខែ .............. ឆ្នាំ ............................... ព.ស. ................<br/>
+                រាជធានីភ្នំពេញ ថ្ងៃទី .............. ខែ ............... ឆ្នាំ .............. <br/>
+                អ្នកធ្វើរបាយការណ៍
+            </p>
+        </div>
     </body>
 </php>
