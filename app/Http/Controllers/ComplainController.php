@@ -94,21 +94,20 @@ class ComplainController extends Controller
         $complain->statement = $request->statement;
         $complain->save();
         // Check If user storage directory is exist
+        // $directory = "/files/1";
         $directory = "/files/".$complain->id;
-        if(!Storage::exists($directory)){
-            Storage::makeDirectory($directory, $mode = 0755, true, true);
+        if(!Storage::disk('public')->exists($directory)){
+            Storage::disk('public')->makeDirectory($directory);
         }
         $paths = [];
+        
         if($request->hasFile('references'))
         {
             // save files path to images table
             foreach($request->file('references') as $reference){
-                $path = $reference->store($directory);
-                $path = env('APP_URL')."/storage/".$path;
-                array_push($paths, $path);
+                $path = Storage::disk('public')->putFile($directory, $reference);
+                array_push($paths, env('APP_URL').'/storage/'.$path);
             }
-
-            // $paths = json_encode($paths);
 
             // attach files path to complain
             $complain->reference = $paths;
