@@ -116,8 +116,7 @@ class ComplainController extends Controller
         return response()->json(
             [
                 "status" => "ok",
-                "path" => $paths,
-                "content" =>  Storage::disk('public')
+                "path" => $paths
             ]
         );
     }
