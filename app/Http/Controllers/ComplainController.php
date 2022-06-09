@@ -100,12 +100,12 @@ class ComplainController extends Controller
             Storage::disk('public')->makeDirectory($directory);
         }
         $paths = [];
-        
+
         if($request->hasFile('references'))
         {
             // save files path to images table
             foreach($request->file('references') as $reference){
-                $path = Storage::disk('public')->putFile($directory, $reference);
+                $path = Storage::disk('local')->putFile($directory, $reference);
                 array_push($paths, env('APP_URL').'/storage/'.$path);
             }
 
