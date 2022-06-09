@@ -106,7 +106,7 @@ class ComplainController extends Controller
             // save files path to images table
             foreach($request->file('references') as $reference){
                 $path = Storage::disk('public')->putFile($directory, $reference);
-                array_push($paths, Storage::url($path));
+                $paths[] = env('APP_URL') . Storage::url($path);
             }
 
             // attach files path to complain
