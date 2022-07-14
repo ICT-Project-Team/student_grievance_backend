@@ -18,7 +18,7 @@ jobs:
           php_extensions: mbstring gd
           version: 1
       - name: Sync files
-        uses: SamKirkland/FTP-Deploy-Action@4.2.0
+        uses: SamKirkland/FTP-Deploy-Action@4.3.0
         with:
           server: rupp.edu.kh
           username: ferupp_grievance
