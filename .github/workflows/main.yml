@@ -15,7 +15,7 @@ jobs:
         uses: php-actions/composer@v6
         with:
           php_version: "8.1"
-          php_extensions: mbstring
+          php_extensions: mbstring gd
           version: 1
       - name: Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.2.0
