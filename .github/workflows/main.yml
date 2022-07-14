@@ -11,19 +11,16 @@ jobs:
         uses: actions/checkout@v2
         with:
           ref: 'production'
-      - name: Install Env
-        uses: actions/setup-node@v1
+      - name: Install dependencies
+        uses: php-actions/composer@v6
         with:
-          node-version: 16
-      - run: npm i
-      - run: npm run build --if-present
-        env:
-          CI: false
+          php_version: "8.1"
+          php_extensions: mbstring
+          version: 1
       - name: Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.2.0
         with:
           server: rupp.edu.kh
           username: ferupp_grievance
           password: R2804#^2022E
-          local-dir: ./build/
-          server-dir: ./complaint-form/
+          server-dir: ./complaint-backend/
