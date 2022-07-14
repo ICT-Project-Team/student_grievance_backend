@@ -1,0 +1,26 @@
+on:
+  push:
+    branches: [ production ]
+name:  Deploy website on push
+jobs:
+  web-deploy:
+    name:  Deploy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v2
+        with:
+          ref: 'production'
+      - name: Install dependencies
+        uses: php-actions/composer@v6
+        with:
+          php_version: "8.1"
+          php_extensions: mbstring
+          version: 1
+      - name: Sync files
+        uses: SamKirkland/FTP-Deploy-Action@4.2.0
+        with:
+          server: rupp.edu.kh
+          username: ferupp_grievance
+          password: R2804#^2022E
+          server-dir: ./complaint-backend/
