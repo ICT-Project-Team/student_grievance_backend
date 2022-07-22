@@ -15,7 +15,7 @@ jobs:
         uses: php-actions/composer@v6
         with:
           command: composer
-          arg: install --optimize-autoloader
+          args: install --optimize-autoloader
           php_version: "8.1"
           php_extensions: mbstring
           version: 1
