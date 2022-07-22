@@ -14,7 +14,8 @@ jobs:
       - name: Install dependencies
         uses: php-actions/composer@v6
         with:
-          command: composer install --optimize-autoloader
+          command: composer
+          arg: install --optimize-autoloader
           php_version: "8.1"
           php_extensions: mbstring
           version: 1
