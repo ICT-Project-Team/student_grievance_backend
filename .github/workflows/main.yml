@@ -12,12 +12,11 @@ jobs:
         with:
           ref: 'production'
       - name: Install dependencies
-        uses: php-actions/composer@v6
+        uses: php-actions/composer@v7
         with:
-          args: install --optimize-autoloader
-          php_version: "8.1"
+          php_version: "8.0"
           php_extensions: mbstring
-          version: 1
+          version: 2.x
       - name: Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.2.0
         with:
