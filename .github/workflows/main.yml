@@ -16,7 +16,7 @@ jobs:
         with:
           php_version: "8.0"
           php_extensions: mbstring
-          version: 2.x
+          version: 2.2.x
       - name: Sync files
         uses: SamKirkland/FTP-Deploy-Action@4.2.0
         with:
